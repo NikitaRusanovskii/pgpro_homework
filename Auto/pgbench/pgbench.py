@@ -1,5 +1,6 @@
 import re, subprocess, argparse
 from pgbench_config import *
+from draw_report import draw_tps, draw_lat
 
 
 def set_postgresqlconf_param(param: str, value: str):
@@ -45,18 +46,21 @@ def shutdown(lib: str):
         delete_extension(lib)
     subprocess.run(f'pg_ctl stop -D {pgdata}', shell=True)
 
-def save(result: list, path: str):
+def save(result: list, path: str | Path):
     with open(path, 'a') as file:
         file.write(f"(iter={result[0]}:[tps={result[1]};latency={result[2]}])\n")
+
 
 def bench(client_num: int):
     result = subprocess.run(f'pgbench -c {client_num} -j $(nproc) -t {transactions} {db}',
                             shell=True, capture_output=True)
+    
     lat_aver = re.search(r'^\s*latency average = (\d+\.\d+)', result.stdout.decode(), re.MULTILINE)
     tps = re.search(r'^\s*tps = (\d+\.\d+)', result.stdout.decode(), re.MULTILINE)
-    if lat_aver and tps:
+    if lat_aver and tps and lat_stddev:
         lat_aver = float(lat_aver.group(1))
         tps = float(tps.group(1))
+        lat_stddev = float(lat_stddev.group(1))
 
     return [tps, lat_aver]
 
@@ -81,12 +85,13 @@ def run():
                     save(result, (reports_path / f'S{shared_buffer}L{int(lib=='')}C{client_num}.report'))
             shutdown(lib)
 
-def draw():
-    pass
-
 def clear():
     # Be careful!!!!!!!!!!!!
     subprocess.run(f'rm -rf {reports_path}', shell=True)
+
+def draw():
+    draw_lat(reports_path)
+    draw_tps(reports_path)
 
 def main():
     parser = argparse.ArgumentParser()
