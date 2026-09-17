@@ -6,7 +6,7 @@ shared_buffers = ['512MB', '1024MB']
 libs = ['', 'pg_stat_statements']
 client_nums = [1, 2, 4, 8, 16, 32, 64, 128]
 iters = range(0, 3)
-transactions = 10
+transactions = 1000
 
 #pgbench config
 db = 'pgbench_test'

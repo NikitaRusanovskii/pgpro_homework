@@ -57,10 +57,9 @@ def bench(client_num: int):
     
     lat_aver = re.search(r'^\s*latency average = (\d+\.\d+)', result.stdout.decode(), re.MULTILINE)
     tps = re.search(r'^\s*tps = (\d+\.\d+)', result.stdout.decode(), re.MULTILINE)
-    if lat_aver and tps and lat_stddev:
+    if lat_aver and tps:
         lat_aver = float(lat_aver.group(1))
         tps = float(tps.group(1))
-        lat_stddev = float(lat_stddev.group(1))
 
     return [tps, lat_aver]
 
