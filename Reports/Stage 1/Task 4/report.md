@@ -735,6 +735,56 @@ step 2: EEOP_DONE
 constval = {value = 0, isnull = true}
 
 Значит, решение о том, что результат выражения должен быть равен NULL было принято ещё раньше.
-Нужно посмотреть момент, когда формируются steps
+Моё предположение заключается в том, что Postgres принимает это решение на этапе планирования запроса.
 
 \========================================================
+
+Теперь попробуем по-другому: Уберём ключевое слово STRICT из SQL описания объекта расширения.
+Таким образом должна произойти ошибка. SIGSEGV.
+
+\========================================================
+
+┌──(admin㉿DESKTOP-NNMFN20)-[~/PostgresRepo]
+└─$ psql -h localhost -p 5432 -U admin postgres
+psql (17.11)
+Type "help" for help.
+
+postgres=# CREATE EXTENSION change_text;
+CREATE EXTENSION
+postgres=# SELECT change_text(NULL, 'a');
+server closed the connection unexpectedly
+        This probably means the server terminated abnormally
+        before or while processing the request.
+The connection to the server was lost. Attempting reset: 2026-09-18 22:28:48.177 MSK [34138] LOG:  server process (PID 34155) was terminated by signal 11: Segmentation fault
+2026-09-18 22:28:48.177 MSK [34138] DETAIL:  Failed process was running: SELECT change_text(NULL, 'a');
+2026-09-18 22:28:48.177 MSK [34138] LOG:  terminating any other active server processes
+2026-09-18 22:28:48.179 MSK [34163] FATAL:  the database system is in recovery mode
+Failed.
+The connection to the server was lost. Attempting reset: Failed.
+!?> 2026-09-18 22:28:48.180 MSK [34138] LOG:  all server processes terminated; reinitializing
+2026-09-18 22:28:48.220 MSK [34164] LOG:  database system was interrupted; last known up at 2026-09-18 22:27:20 MSK
+2026-09-18 22:28:48.576 MSK [34164] LOG:  database system was not properly shut down; automatic recovery in progress
+2026-09-18 22:28:48.581 MSK [34164] LOG:  redo starts at 0/166CF30
+2026-09-18 22:28:48.582 MSK [34164] LOG:  invalid record length at 0/167A8C8: expected at least 24, got 0
+2026-09-18 22:28:48.582 MSK [34164] LOG:  redo done at 0/167A890 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2026-09-18 22:28:48.595 MSK [34165] LOG:  checkpoint starting: end-of-recovery immediate wait
+2026-09-18 22:28:48.626 MSK [34165] LOG:  checkpoint complete: wrote 17 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.008 s, sync=0.015 s, total=0.038 s; sync files=15, longest=0.004 s, average=0.001 s; distance=54 kB, estimate=54 kB; lsn=0/167A8C8, redo lsn=0/167A8C8
+2026-09-18 22:28:48.632 MSK [34138] LOG:  database system is ready to accept connections
+
+
+\========================================================
+
+
+Как мы видим, сервер аварийно завершил работу с нашим соединением.
+Теперь попробуем отладить.
+
+\========================================================
+
+0x000075fcd109a7d2 in ?? () from /usr/lib/x86_64-linux-gnu/libc.so.6
+(gdb) c
+Continuing.
+
+Program received signal SIGSEGV, Segmentation fault.
+0x00005b401af56568 in pg_detoast_datum_packed (datum=0x0) at fmgr.c:1866
+1866            if (VARATT_IS_COMPRESSED(datum) || VARATT_IS_EXTERNAL(datum))
+(gdb)
