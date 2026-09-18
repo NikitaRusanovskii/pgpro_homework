@@ -9,7 +9,7 @@ iters = range(0, 3)
 transactions = 1000
 
 #pgbench config
-db = 'pgbench_test'
+db = 'pgbench_test_master'
 scale_factor = 50
 
 #pgbench cluster config
@@ -17,7 +17,7 @@ host = 'localhost'
 port = '5432'
 user = 'admin'
 
-pgdata = Path(__file__).resolve().parent / "../../Data/pgbench"
+pgdata = Path(__file__).resolve().parent / "../../Data/pgbench_master"
 path_to_postgres_conf = pgdata / 'postgresql.conf'
 
 #reports:
