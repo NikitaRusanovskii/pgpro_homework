@@ -81,7 +81,7 @@ def run():
             for client_num in client_nums:
                 for i in iters:
                     result = [i] + bench(client_num)
-                    save(result, (reports_path / f'S{shared_buffer}L{int(lib=='')}C{client_num}.report'))
+                    save(result, (reports_path / f'S{shared_buffer}L{int(lib!='')}C{client_num}.report'))
             shutdown(lib)
 
 def clear():

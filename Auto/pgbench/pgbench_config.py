@@ -17,8 +17,9 @@ host = 'localhost'
 port = '5432'
 user = 'admin'
 
-pgdata = Path(__file__).resolve().parent / "../../Data/pgbench_master"
+pgdata_name = 'pgbench_master'
+pgdata = Path(__file__).resolve().parent / f"../../Data/{pgdata_name}"
 path_to_postgres_conf = pgdata / 'postgresql.conf'
 
 #reports:
-reports_path = Path(__file__).resolve().parent / "reports"
+reports_path = Path(__file__).resolve().parent / "reports_master"
