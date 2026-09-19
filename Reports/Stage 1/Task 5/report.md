@@ -33,10 +33,15 @@ pgbench -i -s50 pgbench_test - инициализация рабочих таб�
 
 Значения строк в таблицах по умолчанию:
 table                   # of rows
+
 \---------------------------------
+
 pgbench_branches        1
+
 pgbench_tellers         10
+
 pgbench_accounts        100000
+
 pgbench_history         0
 
 При указании scale_factor с помощью -s, эти значения увеличиваются в scale_factor раз.
