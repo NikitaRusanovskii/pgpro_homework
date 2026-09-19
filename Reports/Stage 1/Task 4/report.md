@@ -788,3 +788,8 @@ Program received signal SIGSEGV, Segmentation fault.
 0x00005b401af56568 in pg_detoast_datum_packed (datum=0x0) at fmgr.c:1866
 1866            if (VARATT_IS_COMPRESSED(datum) || VARATT_IS_EXTERNAL(datum))
 (gdb)
+
+\========================================================
+
+Как мы видим, gdb автоматически перехватил выполнение программы.
+Теперь можно воспользоваться bt, p, info и другими командами, чтобы отловить условие, приводящее к ошибке.
