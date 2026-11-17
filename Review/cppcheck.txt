@@ -1,0 +1,82 @@
+//////////
+Конфигурация cppcheck:
+cppcheck
+--enable=all
+--inconclusive
+--force
+--inline-suppr
+--error-exitcode=1
+--suppress=missingInclude
+--suppress=missingIncludeSystem
+--language=c
+--std=c99
+--template=gcc
+--file-filter='*.c'
+--check-level=exhaustive
+--suppress=unmatchedSuppression
+.
+/////////
+
+
+
+pg_array_search.c:933:14: warning: Condition 'size_ok<size_max' is always false [knownConditionTrueFalse]
+ if (size_ok < size_max)
+             ^
+pg_array_search.c:925:11: note: size_max is assigned '(size_ok>size_no)?size_ok:size_no' here.
+ size_max = (size_ok > size_no) ? size_ok : size_no;
+          ^
+pg_array_search.c:933:14: note: Condition 'size_ok<size_max' is always false
+ if (size_ok < size_max)
+             ^
+pg_array_search.c:100:8: warning: The scope of the variable 'is_float' can be reduced. [variableScope]
+ bool  is_float = 0;
+       ^
+pg_array_search.c:509:16: warning: The scope of the variable 'iterator' can be reduced. [variableScope]
+ ArrayIterator iterator;
+               ^
+pg_array_search.c:515:8: warning: The scope of the variable 'found' can be reduced. [variableScope]
+ bool  found;
+       ^
+pg_array_search.c:584:9: warning: The scope of the variable 'searched_elem' can be reduced. [variableScope]
+ Datum  searched_elem;
+        ^
+pg_array_search.c:586:8: warning: The scope of the variable 'collation' can be reduced. [variableScope]
+ Oid   collation;
+       ^
+pg_array_search.c:693:11: warning: Variable 'pred_buf' can be declared as pointer to const [constVariablePointer]
+ char    *pred_buf;
+          ^
+pg_array_search.c:776:11: warning: Variable 'pred_buf' can be declared as pointer to const [constVariablePointer]
+ char    *pred_buf;
+          ^
+pg_array_search.c:862:11: warning: Variable 'pred_buf' can be declared as pointer to const [constVariablePointer]
+ char    *pred_buf;
+          ^
+pg_array_search.c:293:10: warning: Uninitialized variables: pred.obj1, pred.obj2 [uninitvar]
+  return pred;
+         ^
+pg_array_search.c:446:1: warning: The function 'array_contains' should have static linkage since it is not used outside of its translation unit. [staticFunction]
+array_contains(PG_FUNCTION_ARGS)
+^
+pg_array_search.c:503:1: warning: The function 'array_contains_all' should have static linkage since it is not used outside of its translation unit. [staticFunction]
+array_contains_all(PG_FUNCTION_ARGS)
+^
+pg_array_search.c:580:1: warning: The function 'array_find_all' should have static linkage since it is not used outside of its translation unit. [staticFunction]
+array_find_all(PG_FUNCTION_ARGS)
+^
+pg_array_search.c:677:1: warning: The function 'array_filter' should have static linkage since it is not used outside of its translation unit. [staticFunction]
+array_filter(PG_FUNCTION_ARGS)
+^
+pg_array_search.c:760:1: warning: The function 'array_reject' should have static linkage since it is not used outside of its translation unit. [staticFunction]
+array_reject(PG_FUNCTION_ARGS)
+^
+pg_array_search.c:843:1: warning: The function 'array_partition' should have static linkage since it is not used outside of its translation unit. [staticFunction]
+array_partition(PG_FUNCTION_ARGS)
+^
+pg_array_search.c:961:1: warning: The function 'array_index_of' should have static linkage since it is not used outside of its translation unit. [staticFunction]
+array_index_of(PG_FUNCTION_ARGS)
+^
+pg_array_search.c:1026:1: warning: The function 'array_last_index_of' should have static linkage since it is not used outside of its translation unit. [staticFunction]
+array_last_index_of(PG_FUNCTION_ARGS)
+^
+nofile:0:0: warning: Active checkers: 119/186 (use --checkers-report=<filename> to see details) [checkersReport]
